@@ -33,12 +33,15 @@ namespace Ryujinx.Ava.UI.Views.Main
 
         public MainMenuBarView()
         {
-            InitializeComponent();
+            if (!OperatingSystem.IsMacOS())
+            {
+                InitializeComponent();
+                
+                RyuLogo.IsVisible = !ConfigurationState.Instance.ShowTitleBar;
 
-            RyuLogo.IsVisible = !ConfigurationState.Instance.ShowTitleBar;
-
-            ToggleFileTypesMenuItem.ItemsSource = GenerateToggleFileTypeItems();
-            ChangeLanguageMenuItem.ItemsSource = GenerateLanguageMenuItems();
+                ToggleFileTypesMenuItem.ItemsSource = GenerateToggleFileTypeItems();
+                ChangeLanguageMenuItem.ItemsSource = GenerateLanguageMenuItems();
+            }
         }
 
         private CheckBox[] GenerateToggleFileTypeItems() =>

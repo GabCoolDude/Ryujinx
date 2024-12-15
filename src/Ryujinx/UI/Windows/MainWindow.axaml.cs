@@ -72,7 +72,7 @@ namespace Ryujinx.Ava.UI.Windows
         public readonly double TitleBarHeight;
 
         public readonly double StatusBarHeight;
-        public readonly double MenuBarHeight;
+        public double MenuBarHeight;
 
         public MainWindow()
         {
@@ -97,6 +97,12 @@ namespace Ryujinx.Ava.UI.Windows
             // NOTE: Height of MenuBar and StatusBar is not usable here, since it would still be 0 at this point.
             StatusBarHeight = StatusBarView.StatusBar.MinHeight;
             MenuBarHeight = MenuBar.MinHeight;
+            
+            
+            if (OperatingSystem.IsMacOS())
+            {
+                MenuBar.MinHeight = 5;
+            }
 
             SetWindowSizePosition();
 
