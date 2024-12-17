@@ -40,11 +40,7 @@ DOTNET_COMMON_ARGS=(-p:DebugType=embedded -p:Version="$VERSION" -p:SourceRevisio
 
 dotnet restore
 dotnet build -c "$CONFIGURATION" src/Ryujinx.Headless.SDL2
-dotnet publish -c "$CONFIGURATION" -r osx-arm64 -o "$TEMP_DIRECTORY/publish_arm64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx.Headless.SDL2
 dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx.Headless.SDL2
-
-# Get rid of the support library for ARMeilleure for x64 (that's only for arm64)
-rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
 # Get rid of libsoundio from arm64 builds as we don't have a arm64 variant
 # TODO: remove this once done
@@ -52,13 +48,6 @@ rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 
 rm -rf "$OUTPUT_DIRECTORY"
 mkdir -p "$OUTPUT_DIRECTORY"
-
-# Let's copy one of the two different outputs and remove the executable
-cp -R "$ARM64_OUTPUT/" "$UNIVERSAL_OUTPUT"
-rm "$UNIVERSAL_OUTPUT/$EXECUTABLE_SUB_PATH"
-
-# Make its libraries universal
-python3 "$BASE_DIR/distribution/macos/construct_universal_dylib.py" "$ARM64_OUTPUT" "$X64_OUTPUT" "$UNIVERSAL_OUTPUT" "**/*.dylib"
 
 if ! [ -x "$(command -v lipo)" ];
 then
@@ -72,9 +61,6 @@ else
     LIPO=lipo
 fi
 
-# Make the executable universal
-$LIPO "$ARM64_OUTPUT/$EXECUTABLE_SUB_PATH" "$X64_OUTPUT/$EXECUTABLE_SUB_PATH" -output "$UNIVERSAL_OUTPUT/$EXECUTABLE_SUB_PATH" -create
-
 # Now sign it
 if ! [ -x "$(command -v codesign)" ];
 then
@@ -84,8 +70,6 @@ then
         exit 1
     fi
 
-    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
-    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
     for FILE in "$UNIVERSAL_OUTPUT"/*; do
         if [[ $(file "$FILE") == *"Mach-O"* ]]; then

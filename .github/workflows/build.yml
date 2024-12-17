@@ -21,7 +21,6 @@ jobs:
           - { name: win-x64,     os: windows-latest, zip_os_name: win_x64     }
           - { name: linux-x64,   os: ubuntu-latest,  zip_os_name: linux_x64   }
           - { name: linux-arm64, os: ubuntu-latest,  zip_os_name: linux_arm64 }
-          - { name: osx-x64,     os: macos-13,       zip_os_name: osx_x64     }
 
       fail-fast: false
     steps:
@@ -127,7 +126,7 @@ jobs:
         if: github.event_name == 'pull_request' && matrix.platform.os != 'macos-13'
 
   build_macos:
-    name: macOS Universal (${{ matrix.configuration }})
+    name: macOS arm64 (${{ matrix.configuration }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
