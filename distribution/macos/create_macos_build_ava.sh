@@ -28,7 +28,6 @@ else
   RELEASE_TAR_FILE_NAME=ryujinx-$VERSION-arm64.app.tar
 fi
 
-ARM64_APP_BUNDLE="$TEMP_DIRECTORY/output_arm64/Ryujinx.app"
 UNIVERSAL_APP_BUNDLE="$OUTPUT_DIRECTORY/Ryujinx.app"
 EXECUTABLE_SUB_PATH=Contents/MacOS/Ryujinx
 
@@ -51,8 +50,6 @@ popd
 
 rm -rf "$UNIVERSAL_APP_BUNDLE"
 mkdir -p "$OUTPUT_DIRECTORY"
-
-rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
 
 # Patch up the Info.plist to have appropriate version
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
