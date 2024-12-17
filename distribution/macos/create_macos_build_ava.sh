@@ -52,6 +52,8 @@ popd
 rm -rf "$UNIVERSAL_APP_BUNDLE"
 mkdir -p "$OUTPUT_DIRECTORY"
 
+rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
+
 # Patch up the Info.plist to have appropriate version
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"

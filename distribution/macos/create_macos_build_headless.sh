@@ -49,6 +49,8 @@ rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 rm -rf "$OUTPUT_DIRECTORY"
 mkdir -p "$OUTPUT_DIRECTORY"
 
+rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
+
 if ! [ -x "$(command -v lipo)" ];
 then
     if ! [ -x "$(command -v llvm-lipo-14)" ];
